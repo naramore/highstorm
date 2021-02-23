@@ -1,0 +1,13 @@
+image:
+  file: .gitpod.dockerfile
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: true
+    addCheck: true
+    addComment: true
+vscode:
+  extensions:
+    - elixir-lsp.elixir-ls@0.6.5:QUDuFQqLMdKbA78hQ1SaeQ==
+    - vscode-icons-team.vscode-icons@11.1.0:Lkmo/9w1LmPw4WtT3CAujA==

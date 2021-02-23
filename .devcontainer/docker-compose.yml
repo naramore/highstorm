@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  elixir:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USERNAME: vscode
+        VARIANT: "1.11.3"
+        PHOENIX_VERSION: "1.5.7"
+        NODE_VERSION: "14"
+        DOCKER_VERSION: "20.10.3"
+        EARTHLY_VERSION: "v0.5.2"
+        # specifies the HOST earthly run path, so the container will know where to mount
+        EARTHLY_GLOBAL_RUNPATH: ${EARTHLY_GLOBAL_RUNPATH}
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace:cached
+      - ~/.gitconfig:/root/.gitconfig
+      - ~/.ssh:/root/.ssh
+      - /var/run/docker.sock:/var/run/docker.sock
+      # mounts the host and container earthly run paths
+      - ~/.earthly:${EARTHLY_GLOBAL_RUNPATH}
+      - mix-home-data:/home/vscode/.mix
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+
+volumes:
+  mix-home-data:
+  postgres-data:

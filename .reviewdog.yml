@@ -1,0 +1,14 @@
+runner:
+  credo:
+    cmd: mix credo suggest -a --strict --format=flychecke
+    errorformat:
+      - "%f:%l:%c: %t: %m"
+      - "%f:%l: %t: %m"
+    level: warning
+    name: credo
+  hadolint:
+    cmd: hadolint Dockerfile
+    errorformat:
+      - "%f:%l %m"
+    level: failure
+    name: hadolint

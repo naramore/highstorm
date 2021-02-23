@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "vscode-icons-team.vscode-icons",
+    "earthly.earthfile-syntax-highlighting",
+    "ms-vscode-remote.remote-containers",
+    "jakebecker.elixir-ls",
+    "pgourlain.erlang",
+		"mtxr.sqltools",
+		"mtxr.sqltools-driver-pg",
+		"ms-azuretools.vscode-docker",
+    "vsls-contrib.codetour",
+    "eamodio.gitlens",
+    "ms-vsliveshare.vsliveshare",
+    "ms-vsliveshare.vsliveshare-pack"
+  ]
+}

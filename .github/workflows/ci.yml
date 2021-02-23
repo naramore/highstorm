@@ -1,0 +1,50 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  analyze-elixir:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: 1
+    strategy:
+      fail-fast: false
+      matrix:
+        # see https://hexdocs.pm/elixir/compatibility-and-deprecations.html
+        include:
+          - elixir: 1.11.3
+            otp: 23.2.4
+    steps:
+      - uses: actions/checkout@v2
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       _build
+      #       deps
+      #     key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-mix-${{ hashFiles('**/mix.lock') }}
+      - name: Download released earth
+        run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.5.1/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'"
+      - name: Execute analyses
+        run: earthly --build-arg ELIXIR=${{ matrix.elixir }} --build-arg OTP=${{ matrix.otp }} --build-arg CODECOV_TOKEN=${{ secrets.CODECOV_TOKEN }} +analyses
+  test-elixir:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: 1
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        # see https://hexdocs.pm/elixir/compatibility-and-deprecations.html
+        include:
+          - elixir: 1.11.3
+            otp: 23.2.4
+    steps:
+      - uses: actions/checkout@v2
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       _build
+      #       deps
+      #     key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-mix-${{ hashFiles('**/mix.lock') }}
+      - name: Download released earth
+        run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.5.1/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'"
+      - name: Execute tests
+        run: earthly --build-arg ELIXIR=${{ matrix.elixir }} --build-arg OTP=${{ matrix.otp }} +test
